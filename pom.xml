@@ -13,18 +13,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <!-- log4j日志文件管理包版本 -->
-        <log4j.version>2.9.1</log4j.version>
         <hadoop.version>2.8.1</hadoop.version>
     </properties>
 
     <dependencies>
-        <!-- log4j日志 -->
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>

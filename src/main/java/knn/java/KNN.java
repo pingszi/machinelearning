@@ -1,11 +1,11 @@
 package knn.java;
 
 import common.arithmetic.DistanceUtil;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 /**
  *********************************************************
@@ -81,8 +81,6 @@ public class KNN {
     public static Object getRst(List<Point> points, Point point, int k, long r) {
         if (points.size() <= k) k = K;
 
-        Point.Distance rst;
-
         //**计算指定点和点集合中每个点之间的距离
         Point p = calculate(points, point, r);
 
@@ -90,10 +88,8 @@ public class KNN {
         Point.Distance[] ds = p.getD();
         Point.Distance[] kDs = Arrays.copyOf(ds, k);
 
-        if(k == 1)
-            rst = kDs[0];
-        else
-            rst = mode(kDs); //**计算距离的众数
+        //**计算距离的众数
+        Point.Distance rst = k == 1 ? kDs[0] : KNN.mode(kDs);
 
         logger.info("计算结果：" + rst);
 
@@ -111,7 +107,7 @@ public class KNN {
      ** @return 指定点
      ** *******************************************************
      */
-    private static Point calculate(List<Point> points, Point point, long r) {
+    public static Point calculate(List<Point> points, Point point, long r) {
         logger.info("计算距离..." );
 
         Point.Distance[] ds = new Point.Distance[points.size()];
@@ -140,7 +136,7 @@ public class KNN {
      ** @return 众数
      ** *******************************************************
      */
-    private static Point.Distance mode(Point.Distance[] ds) {
+    public static Point.Distance mode(Point.Distance[] ds) {
         logger.info("计算众数..." );
 
         Map<Point.Distance, Integer> countMap = new HashMap<>();

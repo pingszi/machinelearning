@@ -1,6 +1,11 @@
 package knn.java;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *********************************************************
@@ -12,20 +17,65 @@ import java.util.Arrays;
  */
 public class Test {
 
+    /**
+     *********************************************************
+     ** @desc ：解析文本文件数据
+     ** @author Pings
+     ** @date   2017/11/11
+     ** @param  fileName 文件名称
+     ** @return 指定点的结果
+     ** *******************************************************
+     */
+    public static List<Point> parseData(String fileName) {
+        List<Point> points = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))){
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                try {
+                    points.add(getPoint(line));
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return points;
+    }
+
+    /**
+     *********************************************************
+     ** @desc ：解析每行数据，转换成point对象
+     ** @author Pings
+     ** @date   2017/11/11
+     ** @param  line 每行数据
+     ** @return 指定点的结果
+     ** *******************************************************
+     */
+    public static Point getPoint(String line) {
+        if (line == null || line.trim().length() == 0)
+            throw new IllegalArgumentException(line + " is null");
+
+        String[] datas = line.split(";");
+        double[] point = Arrays.stream(datas).mapToDouble(data -> Double.parseDouble(data)).toArray();
+
+        Point p = new Point(Arrays.copyOf(point, point.length - 1), point[point.length - 1]);
+
+        return p;
+    }
+
     public static void main(String[] args) {
-        double[] d0 = {7.4,0.70,0.00,1.9,0.076,11.0,34.0,0.9978,3.51,0.56,9.4};
-        double[] d1 = {7.8,0.88,0.00,2.6,0.098,25.0,67.0,0.9968,3.20,0.68,9.8};
-        double[] d2 = {7.8,0.76,0.04,2.3,0.092,15.0,54.0,0.9970,3.26,0.65,9.8};
-        double[] d3 = {11.2,0.28,0.56,1.9,0.075,17.0,60.0,0.9980,3.16,0.58,9.8};
-        double[] d4 = {7.4,0.70,0.00,1.9,0.076,11.0,34.0,0.9978,3.51,0.56,9.4};
+        long start = System.currentTimeMillis();
 
-        Point p0 = new Point(d0, 5);
-        Point p1 = new Point(d1, 5);
-        Point p2 = new Point(d2, 5);
-        Point p3 = new Point(d3, 6);
-        Point p4 = new Point(d4, 5);
+        List<Point> trainDatas = parseData("D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\knn\\data-training.txt");
+        List<Point> testDatas = parseData("D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\knn\\data-test.txt");
 
-        Object rst = KNN.getRst(Arrays.asList(p0, p1, p2, p3), p4, 3, 3);
-        System.out.println(p4 + "的品质为：" + rst);
+        testDatas.forEach(testData -> System.out.println(testData + "测试结果：" + KNN.getRst(trainDatas, testData, 5, 1)));
+
+        long end = System.currentTimeMillis();
+        System.out.println("计算时长：" + (end - start) + "毫秒") ;
     }
 }

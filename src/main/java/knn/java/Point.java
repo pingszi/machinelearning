@@ -1,5 +1,12 @@
 package knn.java;
 
+import org.apache.hadoop.io.Writable;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.Arrays;
+
 /**
  *********************************************************
  ** @desc  ： 点数据
@@ -46,6 +53,11 @@ public class Point {
         this.d = d;
     }
 
+    @Override
+    public String toString() {
+        return "data:" + Arrays.toString(p) + ", rst:" + rst;
+    }
+
     /**
      *********************************************************
      ** @desc  ： 两点之间的距离
@@ -54,9 +66,11 @@ public class Point {
      ** @version v1.0
      * *******************************************************
      */
-    static class Distance implements Comparable<Distance> {
+    public static class Distance implements Comparable<Distance>, Writable {
         private double d;
         private Object rst;
+
+        public Distance() {}
 
         public Distance(double d, Object rst) {
             this.d = d;
@@ -76,6 +90,11 @@ public class Point {
         }
 
         public void setRst(Object rst) {
+            this.rst = rst;
+        }
+
+        public void set(double d, Object rst) {
+            this.d = d;
             this.rst = rst;
         }
 
@@ -102,6 +121,19 @@ public class Point {
         @Override
         public int hashCode() {
             return rst != null ? rst.hashCode() : 0;
+        }
+
+
+        @Override
+        public void write(DataOutput dataOutput) throws IOException {
+            dataOutput.writeDouble(this.d);
+            dataOutput.writeUTF(this.rst.toString());
+        }
+
+        @Override
+        public void readFields(DataInput dataInput) throws IOException {
+            this.d = dataInput.readDouble();
+            this.rst = dataInput.readUTF();
         }
     }
 }

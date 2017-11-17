@@ -154,7 +154,7 @@ public class KNN {
         Arrays.sort(counts, new Comparator<Map.Entry<Point.Distance, Integer>>() {
             @Override
             public int compare(Map.Entry<Point.Distance, Integer> o1, Map.Entry<Point.Distance, Integer> o2) {
-                return o1.getValue() - o2.getValue() < 0 ? -1 : o1.getValue() - o2.getValue() == 0 ? 0 : -1;
+                return o1.getValue() - o2.getValue() < 0 ? -1 : o1.getValue() - o2.getValue() == 0 ? 0 : 1;
             }
         });
 

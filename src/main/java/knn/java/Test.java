@@ -52,7 +52,7 @@ public class Test {
      ** @author Pings
      ** @date   2017/11/11
      ** @param  line 每行数据
-     ** @return 指定点的结果
+     ** @return 转换后的点
      ** *******************************************************
      */
     public static Point getPoint(String line) {

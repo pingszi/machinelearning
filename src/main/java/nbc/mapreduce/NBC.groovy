@@ -87,9 +87,7 @@ class NBC {
         protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
             MapWritable trainData = getData(value.toString())
 
-            testDatas.each {
-                context.write(it, NaBayesClaMRUtil.getSingleUnionPro(it, trainData))
-            }
+            testDatas.each {context.write(it, NaBayesClaMRUtil.getSingleUnionPro(it, trainData))}
         }
     }
 

@@ -1,5 +1,6 @@
 package nbc.mapreduce
 
+import common.arithmetic.groovy.NaBayesClaMRUtil
 import hdfs.HdfsUtil
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
@@ -8,6 +9,7 @@ import org.apache.hadoop.io.LongWritable
 import org.apache.hadoop.io.MapWritable
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapreduce.Mapper
+import org.apache.hadoop.mapreduce.Reducer
 
 /**
  *********************************************************
@@ -18,13 +20,6 @@ import org.apache.hadoop.mapreduce.Mapper
  * *******************************************************
  */
 class NBC {
-
-    //**分类
-    static final String CLA = new Text("cla")
-    //**训练数据总数
-    static final String TOTAL = new Text("total")
-    //**训练数据中每个分类的的数量
-    static final String CLASS_QTY = new Text("classQty")
 
     //**测试数据
     static List<MapWritable> testDatas = []
@@ -77,7 +72,7 @@ class NBC {
 
         //**训练数据最后一列为分类
         if (type == "train")
-            rst.put(CLA, new Text(datas[datas.length - 1]))
+            rst.put(NaBayesClaMRUtil.CLA, new Text(datas[datas.length - 1]))
 
         for (int i = 0; i < datas.length; i++) {
             rst.put(new Text(datas[i]), new IntWritable(1))
@@ -90,7 +85,19 @@ class NBC {
 
         @Override
         protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
-            super.map(key, value, context)
+            MapWritable trainData = getData(value.toString())
+
+            testDatas.each {
+                context.write(it, NaBayesClaMRUtil.getSingleUnionPro(it, trainData))
+            }
+        }
+    }
+
+    static class NBCReducer extends Reducer<Text, MapWritable, Text, Text> {
+
+        @Override
+        protected void reduce(Text key, Iterable<MapWritable> values, Context context) throws IOException, InterruptedException {
+            super.reduce(key, values, context)
         }
     }
 }

@@ -1,5 +1,8 @@
 package nbc.mapreduce
 
+import org.apache.hadoop.io.MapWritable
+import org.apache.hadoop.io.Text
+
 /**
  *********************************************************
  ** @desc ： 测试朴素贝叶斯分类算法(NBC)
@@ -9,4 +12,19 @@ package nbc.mapreduce
  * *******************************************************
  */
 class Test {
+
+    static void main(String[] args) {
+        MapWritable test1 = [:]
+        test1.put(new Text("key1"), new Text("value1"))
+        test1.put(new Text("key2"), new Text("value2"))
+        test1.put(new Text("key3"), new Text("value3"))
+
+        MapWritable test2 = [:]
+        test2.put(new Text("key1"), new Text("value1"))
+        test2.put(new Text("key3"), new Text("value3"))
+        test2.put(new Text("key4"), new Text("value4"))
+
+        test1.keySet().retainAll(test2.keySet())
+        println(test1)
+    }
 }

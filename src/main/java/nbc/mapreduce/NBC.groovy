@@ -93,8 +93,9 @@ class NBC {
 
     static class NBCReducer extends Reducer<Text, MapWritable, Text, Text> {
 
-        protected void reduce(Text key, Iterable<MapWritable> values, Mapper.Context context) throws IOException, InterruptedException {
-
+        @Override
+        protected void reduce(Text key, Iterable<MapWritable> values, Reducer.Context context) throws IOException, InterruptedException {
+            println()
         }
     }
 }

@@ -95,9 +95,8 @@ class NBC {
 
     static class NBCReducer extends Reducer<Text, MapWritable, Text, Text> {
 
-        @Override
-        protected void reduce(Text key, Iterable<MapWritable> values, Context context) throws IOException, InterruptedException {
-            super.reduce(key, values, context)
+        protected void reduce(Text key, Iterable<MapWritable> values, Mapper.Context context) throws IOException, InterruptedException {
+
         }
     }
 }

@@ -92,6 +92,7 @@ public class KNN {
         Point.Distance rst = k == 1 ? kDs[0] : KNN.mode(kDs);
 
         logger.info("计算结果：" + rst);
+        System.out.println(point + " " + rst);
 
         return rst.getRst();
     }

@@ -135,5 +135,10 @@ public class Point {
             this.d = dataInput.readDouble();
             this.rst = dataInput.readUTF();
         }
+
+        @Override
+        public Distance clone() {
+            return new Distance(this.getD(), this.getRst());
+        }
     }
 }

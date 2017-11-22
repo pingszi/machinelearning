@@ -9,41 +9,49 @@
 
 mapper-------------------------------------
 key：<=30 medium yes fair  
-value：total 1
-       cla no
-       <=30 | no 1, medium | no 0, yes | no 0,fair | no 1
+value：[
+        total: 1
+        cla: no
+        <=30 | no: 1, medium | no: 0, yes | no: 0,fair | no: 1
+       ]
 context.write(key, value)
 
 key：<=30 medium yes fair  
-value：total 1
-	   cla yes
-       <=30 | yes 0, medium | yes 0, yes | yes 0,fair | yes 1
+value：[
+        total: 1
+	    cla: yes
+        <=30 | yes: 0, medium | yes: 0, yes | yes: 0,fair | yes: 1
+       ]
 context.write(key, value)
 
 key：<=30 medium yes fair  
-value：total 1
-       cla yes
-       <=30 | yes 0, medium | yes 0, yes | yes 1,fair | yes 1
+value：[
+        total: 1
+        cla: yes
+        <=30 | yes: 0, medium | yes: 0, yes | yes: 1,fair | yes: 1
+       ]
 context.write(key, value)
 
 key：<=30 medium yes fair  
-value：total 1
-       cla no
-       <=30 | no 0, medium | no 0, yes | no 1,fair | no 0
+value：[
+        total: 1
+        cla no
+        <=30 | no: 0, medium | no: 0, yes | no: 1,fair | no: 0
+       ]
 context.write(key, value)
            
 reducer-------------------------------------
 key：<=30 medium yes fair
-value：total 4
-       no 2, yes 2
-       <=30 | yes 0, medium | yes 0, yes | yes 1,fair | yes 2
-	   <=30 | no 1, medium | no 0, yes | no 1,fair | no 1
+value：[
+        total: 4
+        cla: [no: 2, yes: 2]
+        property:
+        [yes:[<=30 | yes: 0, medium | yes: 0, yes | yes 1,fair: | yes: 2]]
+	    [no: [<=30 | no: 1, medium | no: 0, yes | no: 1,fair | no: 1]]
+	   ]
 	   
-先验概率P(yes) = 2 / 4 
-先验概率P(no)  = 2 / 4 
-
-似然度P(x|yes) = (0 / 2) * (0 / 2) * (1 / 2) * (2 / 2)
-似然度P(x|no)  = (1 / 2) * (0 / 2) * (1 / 2) * (1 / 2)
+先验概率P(yes) = 2 / 4   P(no)  = 2 / 4
+似然度：P(x|yes) = (0 / 2) * (0 / 2) * (1 / 2) * (2 / 2)  P(x|no)  = (1 / 2) * (0 / 2) * (1 / 2) * (1 / 2)
 
 P(x) = P(yes)P(x|yes) + P(no)P(x|no)
 P(yes|x) = P(yes)P(x|yes) / P(x)

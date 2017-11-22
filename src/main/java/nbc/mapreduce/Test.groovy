@@ -26,5 +26,9 @@ class Test {
 
         test1.keySet().retainAll(test2.keySet())
         println(test1)
+
+        def key5 = "key5s"
+        Map<String, Integer> test3 = [(key5): 1]
+        println test3.get(key5)
     }
 }

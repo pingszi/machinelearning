@@ -4,12 +4,13 @@ import common.arithmetic.groovy.NaBayesClaMRUtil
 import hdfs.HdfsUtil
 import org.apache.hadoop.fs.FileSystem
 import org.apache.hadoop.fs.Path
-import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.io.LongWritable
 import org.apache.hadoop.io.MapWritable
 import org.apache.hadoop.io.Text
 import org.apache.hadoop.mapreduce.Mapper
 import org.apache.hadoop.mapreduce.Reducer
+import org.apache.log4j.LogManager
+import org.apache.log4j.Logger
 
 /**
  *********************************************************
@@ -20,6 +21,8 @@ import org.apache.hadoop.mapreduce.Reducer
  * *******************************************************
  */
 class NBC {
+
+    private static Logger logger = LogManager.getLogger(NBC.class)
 
     //**测试数据
     static List<MapWritable> testDatas = []
@@ -75,7 +78,7 @@ class NBC {
             rst.put(NaBayesClaMRUtil.CLA, new Text(datas[datas.length - 1]))
 
         for (int i = 0; i < datas.length; i++) {
-            rst.put(new Text(datas[i]), new IntWritable(1))
+            rst.put(new Text(datas[i]), NaBayesClaMRUtil.ONE)
         }
 
         return rst
@@ -87,15 +90,24 @@ class NBC {
         protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
             MapWritable trainData = getData(value.toString())
 
-            testDatas.each {context.write(it, NaBayesClaMRUtil.getSingleUnionPro(it, trainData))}
+            testDatas.each {context.write(it, NaBayesClaMRUtil.getSingleUnionQty(it, trainData))}
         }
     }
 
     static class NBCReducer extends Reducer<Text, MapWritable, Text, Text> {
+        Text v = new Text()
 
         @Override
         protected void reduce(Text key, Iterable<MapWritable> values, Reducer.Context context) throws IOException, InterruptedException {
-            println()
+            //**统计数据
+            DataList dataList = new DataList()
+            values.each {dataList.putTrains(it)}
+
+            Map<String, Double> allPro = NaBayesClaMRUtil.getAllPro(dataList)
+            logger.info(allPro)
+
+            v.set(dataList.getTestCla())
+            context.write(key, v)
         }
     }
 }

@@ -77,7 +77,7 @@ public class KNN {
             testDatas.forEach(testData -> {
                 double distance = DistanceUtil.getDistance(testData.getP(), p.getP(), r);
                 v.set(distance, p.getRst());
-                k.set(p.toString());
+                k.set(testData.toString());
 
                 try {
                     context.write(k, v);
@@ -97,11 +97,12 @@ public class KNN {
             int k = Integer.parseInt(kStr);
 
             List<Point.Distance> distances = new ArrayList<>();
-            values.forEach(value -> distances.add(value));
+            //**对象重用：reduce执行多次，key和value相关的对象只有两个，reduce会反复重用这两个对象(Distance添加clone()方法)
+            values.forEach(value -> distances.add(value.clone()));
 
             //**获取最近的K个距离
             Collections.sort(distances);
-            Point.Distance[] kDs = (Point.Distance[]) distances.subList(0, k).toArray();
+            Point.Distance[] kDs = distances.subList(0, k).toArray(new Point.Distance[k]);
 
             //**计算距离的众数
             Point.Distance rst = k == 1 ? kDs[0] : knn.java.KNN.mode(kDs);

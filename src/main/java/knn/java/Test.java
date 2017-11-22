@@ -73,7 +73,7 @@ public class Test {
         List<Point> trainDatas = parseData("D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\knn\\data-training.txt");
         List<Point> testDatas = parseData("D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\knn\\data-test.txt");
 
-        testDatas.forEach(testData -> System.out.println(testData + "测试结果：" + KNN.getRst(trainDatas, testData, 5, 1)));
+        testDatas.forEach(testData -> KNN.getRst(trainDatas, testData, 1, 1));
 
         long end = System.currentTimeMillis();
         System.out.println("计算时长：" + (end - start) + "毫秒") ;

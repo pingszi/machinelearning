@@ -23,7 +23,9 @@ public class Test {
 
     public static String outputDir = "/knn/output/";
     public static String inputTrainFile = "/knn/input/data-training.txt";
-    public static String inputTestFile = "/knn/output/data-test.txt";
+    public static String inputTestFile = "/knn/input/data-test.txt";
+
+    public static String DEFAULT_URL = "hdfs://pings001:9000";
 
     /**上传数据,删除输出目录*/
     public static void init() throws Exception {
@@ -43,6 +45,11 @@ public class Test {
 
         //**传递r的k值
         Configuration conf = new Configuration();
+        //**设置hdfs的地址
+        conf.set("fs.defaultFS", DEFAULT_URL);
+        //**设置yarn的地址
+        conf.set("yarn.resourcemanager.hostname", "pings001");
+
         conf.set("r", args[0]);
         conf.set("k", args[1]);
 

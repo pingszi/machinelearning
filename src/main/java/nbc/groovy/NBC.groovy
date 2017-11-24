@@ -26,7 +26,7 @@ class NBC {
      ** @return 每个分类出现的概率
      ** *******************************************************
      */
-    static Map<String, Object> getRst(DataList dataList, int coeff = 1) {
+    static Map<String, Object> getRst(DataList dataList, int coeff = 0) {
         Map<String, Double> rst = [:]
 
         //**获取测试数据每个分类出现的概率

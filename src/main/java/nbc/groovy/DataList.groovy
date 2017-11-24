@@ -6,6 +6,8 @@ package nbc.groovy
  ** @author Pings
  ** @date 2017/11/16
  ** @version v1.0
+ **
+ ** @update v1.1 增加propertiesCla，用于拉普拉斯平滑
  * *******************************************************
  */
 class DataList {
@@ -18,15 +20,18 @@ class DataList {
     long total = 0
     //**数据属性的描述
     List<String> propertiesDesc
+    //**数据属性的种类数量，用于拉普拉斯平滑
+    List<Integer> propertiesCla
     //**数据分类的描述
     String claDesc
 
     DataList() {}
 
-    DataList(Point testData, List<Point> trains, List<String> propertiesDesc, String claDesc = "分类") {
+    DataList(Point testData, List<Point> trains, List<String> propertiesDesc, List<Integer> propertiesCla, String claDesc = "分类") {
         this.testData = testData
         this.putTrain(trains)
         this.propertiesDesc = propertiesDesc
+        this.propertiesCla = propertiesCla
         this.claDesc = claDesc
     }
 

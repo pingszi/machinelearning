@@ -1,7 +1,13 @@
 package nbc.mapreduce
 
+import hdfs.HdfsUtil
+import org.apache.hadoop.conf.Configuration
+import org.apache.hadoop.fs.Path
 import org.apache.hadoop.io.MapWritable
 import org.apache.hadoop.io.Text
+import org.apache.hadoop.mapreduce.Job
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat
 
 /**
  *********************************************************
@@ -13,22 +19,54 @@ import org.apache.hadoop.io.Text
  */
 class Test {
 
-    static void main(String[] args) {
-        MapWritable test1 = [:]
-        test1.put(new Text("key1"), new Text("value1"))
-        test1.put(new Text("key2"), new Text("value2"))
-        test1.put(new Text("key3"), new Text("value3"))
+    static String trainFile = "D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\nbc\\data-training.txt"
+    static String testFile = "D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\nbc\\data-test.txt"
 
-        MapWritable test2 = [:]
-        test2.put(new Text("key1"), new Text("value1"))
-        test2.put(new Text("key3"), new Text("value3"))
-        test2.put(new Text("key4"), new Text("value4"))
+    static String outputDir = "/nbc/output/"
+    static String inputTrainFile = "/nbc/input/data-training.txt"
+    static String inputTestFile = "/nbc/input/data-test.txt"
 
-        test1.keySet().retainAll(test2.keySet())
-        println(test1)
+    static String DEFAULT_URL = "hdfs://pings001:9000"
 
-        def key5 = "key5s"
-        Map<String, Integer> test3 = [(key5): 1]
-        println test3.get(key5)
+    /**上传数据,删除输出目录*/
+    static void init() throws Exception {
+        HdfsUtil.del(outputDir)
+        HdfsUtil.mkdirs("/nbc/input/")
+
+        HdfsUtil.upload(trainFile, inputTrainFile)
+        HdfsUtil.upload(testFile, inputTestFile)
+    }
+
+    static void main(String[] args) throws Exception {
+        //**先在本地执行本方法，初始化数据
+        //init()
+
+        //**解析测试数据，加载到内存
+        NBC.parseTestData(inputTestFile)
+
+        //**传递r的k值
+        Configuration conf = new Configuration()
+        //**设置hdfs的地址
+        conf.set("fs.defaultFS", DEFAULT_URL)
+        //**设置yarn的地址
+        conf.set("yarn.resourcemanager.hostname", "pings001")
+
+        conf.set("c", args[0])
+
+        Job job = Job.getInstance(conf)
+        job.setJobName("NBC")
+        job.setJarByClass(NBC.class)
+
+        job.setMapperClass(NBC.NBCMapper.class)
+        job.setMapOutputKeyClass(Text.class)
+        job.setMapOutputValueClass(MapWritable.class)
+        FileInputFormat.addInputPath(job, new Path(inputTrainFile))
+
+        job.setReducerClass(NBC.NBCReducer.class)
+        job.setOutputKeyClass(Text.class)
+        job.setOutputValueClass(NBC.class)
+        FileOutputFormat.setOutputPath(job, new Path(outputDir))
+
+        job.waitForCompletion(true)
     }
 }

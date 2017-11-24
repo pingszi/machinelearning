@@ -10,6 +10,8 @@ import org.apache.hadoop.io.MapWritable
  ** @author Pings
  ** @date 2017/11/21
  ** @version v1.0
+ **
+ ** @update v1.1 增加propertiesCla，用于拉普拉斯平滑
  * *******************************************************
  */
 class DataList {
@@ -18,6 +20,8 @@ class DataList {
     private Map<String, Map<String, Integer>> datas = [:]
     //**每种分类的数量
     private Map<String, Integer> clas = [:]
+    //**数据属性的种类数量，用于拉普拉斯平滑
+    Map<String, Integer> propertiesCla = [:]
     //**数据集总数目
     long total = 0
     //**测试数据的分类
@@ -32,7 +36,10 @@ class DataList {
      ** *******************************************************
      */
     void putTrains(MapWritable mapData) {
+        total += 1
         def cla = mapData.get(NaBayesClaMRUtil.CLA).toString()
+        //**每种分类的数量
+        clas.containsKey(cla) ? clas.put(cla, clas.get(cla) + 1) : clas.put(cla, 1)
 
         mapData.each {
             //**训练和测试数据的对比属性，cla(分类)和total(数据总数)排除
@@ -43,9 +50,6 @@ class DataList {
             //**训练和测试数据的对比数量
             def oldUnionCount = (it.getValue() as IntWritable).get()
 
-            //**每种分类的数量
-            clas.containsKey(clas) ? datas.put(cla, clas.get(cla) + 1) : clas.put(cla, 1)
-
             //**已存在的分类
             if(datas.containsKey(cla)) {
                 Map<String, Integer> unionQty = datas.get(cla)
@@ -54,8 +58,6 @@ class DataList {
             } else { //**不存在的分类
                 datas.put(cla, [(property): oldUnionCount])
             }
-
-            total += 1
         }
     }
 
@@ -83,6 +85,19 @@ class DataList {
      */
     int getClaCount(String cla) {
         this.clas.get(cla)
+    }
+
+    /**
+     *********************************************************
+     ** @desc ：获取指定属性的种类数量分类
+     ** @author Pings
+     ** @date   2017/11/23
+     ** @param  cla 分类
+     ** @return 指定分类的数量
+     ** *******************************************************
+     */
+    int getPropertiesClaCount(String cla) {
+        this.propertiesCla.get(cla)
     }
 
     /**

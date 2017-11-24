@@ -47,8 +47,8 @@ class NBC {
             ir = new InputStreamReader(is)
             br = new BufferedReader(ir)
 
-            int i = 0
-            for(String line = br.readLine(); line != null; i++)
+            String line
+            for(int i = 0; (line = br.readLine()) != null; i++)
                 //**第一行为属性描述
                 !i ? (propertiesDesc = line.split(" ")) : testDatas.add(getData(line, "test"))
         } finally {
@@ -85,12 +85,19 @@ class NBC {
     }
 
     static class NBCMapper extends Mapper<LongWritable, Text, Text, MapWritable> {
+        Text k = new Text()
 
         @Override
         protected void map(LongWritable key, Text value, Mapper.Context context) throws IOException, InterruptedException {
+            String line = value.toString()
+            if(line.contains("年龄")) return
+
             MapWritable trainData = getData(value.toString())
 
-            testDatas.each {context.write(it, NaBayesClaMRUtil.getSingleUnionQty(it, trainData))}
+            testDatas.each {
+                k.set(it.toString())
+                context.write(k, NaBayesClaMRUtil.getSingleUnionQty(it, trainData))
+            }
         }
     }
 
@@ -99,11 +106,16 @@ class NBC {
 
         @Override
         protected void reduce(Text key, Iterable<MapWritable> values, Reducer.Context context) throws IOException, InterruptedException {
+            //**获取K值，默认为1
+            String cStr = context.getConfiguration().get("c", "1")
+            int c = Integer.parseInt(cStr)
+
             //**统计数据
             DataList dataList = new DataList()
+
             values.each {dataList.putTrains(it)}
 
-            Map<String, Double> allPro = NaBayesClaMRUtil.getAllPro(dataList)
+            Map<String, Double> allPro = NaBayesClaMRUtil.getAllPro(dataList, c)
             logger.info(allPro)
 
             v.set(dataList.getTestCla())

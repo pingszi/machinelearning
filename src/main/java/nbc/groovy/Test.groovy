@@ -59,7 +59,8 @@ class Test {
     }
 
     static DataList getDataList(List<String> desc, Point testData, List<Point> trains) {
-        new DataList(testData, trains, desc.subList(0, desc.size() - 1), desc.get(desc.size() - 1))
+        List<Integer> propertiesCla = [3, 3, 2, 2]
+        new DataList(testData, trains, desc.subList(0, desc.size() - 1), propertiesCla, desc.get(desc.size() - 1))
     }
 
     static void main(String[] args) {
@@ -69,7 +70,7 @@ class Test {
         def trains =  parseData("D:\\java\\source\\Pings\\machinelearning\\src\\main\\java\\nbc\\data-training.txt")
 
         DataList dataList = getDataList((List<String>)trains.get("desc"), test.get("data").get(0), trains.get("data"))
-        Map<String, Object> rst = NBC.getRst(dataList)
+        Map<String, Object> rst = NBC.getRst(dataList, 1)
 
         long end = System.currentTimeMillis()
 

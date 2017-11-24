@@ -45,7 +45,7 @@ key：<=30 medium yes fair
 value：[
         total: 4
         cla: [no: 2, yes: 2]
-        property:
+        datas:
         [yes:[<=30 | yes: 0, medium | yes: 0, yes | yes 1,fair: | yes: 2]]
 	    [no: [<=30 | no: 1, medium | no: 0, yes | no: 1,fair | no: 1]]
 	   ]

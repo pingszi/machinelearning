@@ -6,8 +6,6 @@ package nbc.groovy
  ** @author Pings
  ** @date 2017/11/16
  ** @version v1.0
- **
- ** @update v1.1 增加propertiesCla，用于拉普拉斯平滑
  * *******************************************************
  */
 class DataList {

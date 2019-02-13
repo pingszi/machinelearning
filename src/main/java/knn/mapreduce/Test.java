@@ -38,9 +38,9 @@ public class Test {
 
     public static void main(String[] args) throws Exception {
         //**先在本地执行本方法，初始化数据
-        //init();
+        init();
 
-        //**解析测试数据，加载到内存
+       /* //**解析测试数据，加载到内存
         KNN.parseTestData(inputTestFile);
 
         //**传递r的k值
@@ -67,6 +67,6 @@ public class Test {
         job.setOutputValueClass(Point.Distance.class);
         FileOutputFormat.setOutputPath(job, new Path(outputDir));
 
-        job.waitForCompletion(true);
+        job.waitForCompletion(true);*/
     }
 }

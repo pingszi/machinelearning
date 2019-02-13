@@ -117,13 +117,13 @@ public class KNN {
             double distance = DistanceUtil.getDistance(points.get(i).getP(), point.getP(), r);
             ds[i] = new Point.Distance(distance, points.get(i).getRst());
 
-            logger.info("离第"+ i +"个点之间的距离：" + distance);
+            logger.debug("离第"+ i +"个点之间的距离：" + distance);
         }
 
         Arrays.sort(ds);
         point.setD(ds);
 
-        logger.info("距离从小到大排序："+ Arrays.toString(ds));
+        logger.debug("距离从小到大排序："+ Arrays.toString(ds));
 
         return point;
     }

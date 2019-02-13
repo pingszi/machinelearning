@@ -72,16 +72,4 @@ public class DistanceUtil {
         return Math.pow(rst, 1d/r);
     }
 
-    public static void main(String[] args) {
-        long start = System.currentTimeMillis();
-
-        double[] d1 = {7.4,0.70,0.00,1.9,0.076,11.0,34.0,0.9978,3.51,0.56,9.4};
-        double[] d2 = {11.2,0.28,0.56,1.9,0.075,17.0,60.0,0.9980,3.16,0.58,9.8};
-        double d = getDistance(d1, d2, 80l);
-
-        long end = System.currentTimeMillis();
-
-        System.out.println(d);
-        System.out.println("计算时长：" + (end - start) + "毫秒") ;
-    }
 }

@@ -23,7 +23,7 @@ public class HdfsUtil {
     //**连接hdfs的用户名(与hdfs的用户同名，避免远程连接的权限问题)
     private static String DEFAULT_USER = "hadoop";
     //**hdfs连接地址
-    private static String DEFAULT_URL = "hdfs://pings001:9000";
+    private static String DEFAULT_URL = "hdfs://hadoop10:9000";
 
     /**
      *********************************************************
